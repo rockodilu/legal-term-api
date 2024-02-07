@@ -88,3 +88,7 @@
     - Therefore all of your k8s deployments, configurations and other HA resources will re-run on next cluster restart.
 - cilium CNI is used as a network plugin because it supports VPC ENI networking and Kubernetes Network Policies(useful for CKAD/CKA exam hands-on preparation).
 - Official kOps documentation - https://kops.sigs.k8s.io/
+
+
+
+app test
