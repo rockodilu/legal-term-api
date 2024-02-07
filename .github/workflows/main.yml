@@ -11,7 +11,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build Docker image
       run: docker build -t fastapi .
-    - name: Save Docker image
+    - name: Save Docker image 
       run: docker save fastapi | gzip > fastapi.tar.gz
     - name: Upload Docker image
       uses: actions/upload-artifact@v2
