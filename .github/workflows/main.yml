@@ -3,55 +3,49 @@ stages:
   - deploy
 
 variables:
-  KUBECONFIG: ENV UVICORN_HOST=0.0.0.0 UVICORN_PORT=8000
-
-build:
-  stage: build
-  script:
-    - docker build -t fastapi .
-    - docker save fastapi | gzip > fastapi.tar.gz
-  artifacts:
-    paths:
-    - fastapi.tar.gz
-
-deploy:
-  stage: deploy
-  script:
-    - echo "$KUBECONFIG" > kubeconfig.yaml
-    - kubectl apply -f KubernetesManifest.yml
-
-name: CI
-
-on:
-  pull_request:
-    branches: [ main ]
+  UVICORN_HOST: "0.0.0.0"
+  UVICORN_PORT: "8000"
 
 jobs:
   build:
+    stage: build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Build Docker image
-      run: docker build -t fastapi .
-    - name: Save Docker image
-      run: docker save fastapi | gzip > fastapi.tar.gz
-    - name: Upload Docker image
-      uses: actions/upload-artifact@v2
-      with:
-        name: fastapi
-        path: fastapi.tar.gz
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: docker build -t fastapi .
+
+      - name: Save Docker image
+        run: docker save fastapi | gzip > fastapi.tar.gz
+
+      - name: Upload Docker image artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: fastapi
+          path: fastapi.tar.gz
+
   deploy:
+    stage: deploy
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Download Docker image
-      uses: actions/download-artifact@v2
-      with:
-        name: fastapi
-    - name: Load Docker image
-      run: docker load < fastapi.tar.gz
-    - name: Deploy to Kubernetes
-      run: |
-        echo "$KUBECONFIG" > kubeconfig.yaml
-        kubectl apply -f KubernetesManifest.yml
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download Docker image artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: fastapi
+          path: .
+
+      - name: Load Docker image
+        run: docker load < fastapi.tar.gz
+
+      - name: Deploy to Kubernetes
+        run: |
+          echo "UVICORN_HOST=$UVICORN_HOST" > kubeconfig.yaml
+          echo "UVICORN_PORT=$UVICORN_PORT" >> kubeconfig.yaml
+          kubectl apply -f KubernetesManifest.yml
+
