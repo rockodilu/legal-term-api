@@ -31,5 +31,4 @@ jobs:
       run: docker load < fastapi.tar.gz
     - name: Deploy to Kubernetes
       run: |
-  #     echo "$KUBECONFIG" > kubeconfig.yaml
         kubectl apply -f KubernetesManifest.yml
