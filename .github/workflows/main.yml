@@ -1,36 +1,34 @@
-name: CI
+pipeline {
+  agent any
 
-on:
-  pull_request:
-    branches: [ main ]
+  stages {
+    stage('Build Docker Image') {
+      steps {
+        script {
+          docker.build("fastapi")
+        } 
+      }
+    }
+    stage('Push Docker Image') {
+      steps {
+        script {
+          docker.withRegistry('https://hub.docker.com/repository/docker/rockodilu/fastapi/general', '${{secrets.DOCKER_PASSWORD}}') {
+            docker.image("fastapi").push("latest")
+          }
+        }
+      }
+    }
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build Docker image
-      run: docker build -t fastapi .
-    - name: Save Docker image
-      run: docker save fastapi | gzip > fastapi.tar.gz
-    - name: Upload Docker image
-      uses: actions/upload-artifact@v2
-      with:
-        name: fastapi
-        path: fastapi.tar.gz
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Download Docker image
-      uses: actions/download-artifact@v2
-      with:
-        name: fastapi
-    - name: Load Docker image
-      run: docker load < fastapi.tar.gz
-    - name: Deploy to Kubernetes
-      run: |
-        make buckets
-        make deploy
-        kubectl apply -f KubernetesManifest.yml
+    stage('Deploy to Kubernetes') {
+      steps {
+        script {  
+          kubernetesDeploy(
+            kubeconfigId: 'kubeconfigId',
+            configs: '*.yml',
+            enableConfigSubstitution: true
+          )
+        }
+      }
+    }
+  }
+}
