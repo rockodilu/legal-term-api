@@ -30,8 +30,6 @@ jobs:
     - name: Load Docker image
       run: docker load < fastapi.tar.gz
     - name: Deploy to Kubernetes
-      env:
-        KUBECONFIG: ${{ secrets.KUBECONFIG_CONTENT }}
       run: |
-        echo "$KUBECONFIG" > kubeconfig.yaml
+        kubectl apply -f kubectl apply -f
         kubectl apply -f deployment.yml
