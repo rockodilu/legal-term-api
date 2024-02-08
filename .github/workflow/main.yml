@@ -35,3 +35,4 @@ jobs:
       run: |
         echo "$KUBECONFIG" > kubeconfig.yaml
         kubectl apply -f deployment.yml
+        
