@@ -32,5 +32,6 @@ jobs:
     - name: Deploy to Kubernetes
       run: |
         echo "cat ~/.kube/config" > kubeconfig.yaml
+        --validate=false
         kubectl apply -f kubeconfig.yaml
         kubectl apply -f deployment.yaml
