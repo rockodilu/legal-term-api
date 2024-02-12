@@ -1,49 +1,45 @@
-
-name: CI
+name: CI Pipeline
 
 on:
-  pull_request:
+  push:
     branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Build Docker image
-      run: docker build -t fastapi .
-    - name: Save Docker image
-      run: docker save fastapi | gzip > fastapi.tar.gz
-    - name: Upload Docker image
-      uses: actions/upload-artifact@v2
-      with:
-        name: fastapi
-        path: fastapi.tar.gz
-  deploy:
+      - uses: actions/checkout@v3
+      - name: Build Docker image
+        run: docker build -t fastapi .
+      - name: Push Docker image
+        uses: actions/checkout@v2
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        with:
+          context: .
+          image: fastapi
+          registry: docker.io
+
+  test:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Download Docker image
-      uses: actions/download-artifact@v2
-      with:
-        name: fastapi
-    - name: Load Docker image
-      run: docker load < fastapi.tar.gz
-    - uses: aws/k8s-action@v3
-      with:
-        cluster_name: my-cluster
-        use_internal_ip: false
-        service_account: ingress-service.yaml  
-    - name: Apply Kubernetes manifests
-      run: kubectl apply -f deployment.yaml -f ingress-service.yaml  kubectl apply -f ingress-controler.yaml kubectl apply -f 
-  test:
-    runs-on: ubuntu-latest
-    steps:
       - uses: actions/checkout@v3
-      - name: Install dependencies
-        run: pip install poetry
-      - name: Install project dependencies
-        run: poetry install
+      - name: Download Docker image
+        uses: actions/download-artifact@v2
+        with:
+          name: docker-image
+          path: .docker
+
+      - name: Load Docker image
+        run: docker load -i .docker/image.tar
+
       - name: Run tests
-        run: poetry run pytest
+        run: docker run fastapi pytest
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: test_results/
