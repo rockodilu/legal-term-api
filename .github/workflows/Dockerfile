@@ -1,1 +1,33 @@
+name: CI
 
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build Docker image
+      run: docker build -t fastapi .
+    - name: Save Docker image
+      run: docker save fastapi | gzip > fastapi.tar.gz
+    - name: Upload Docker image
+      uses: actions/upload-artifact@v2
+      with:
+        name: fastapi
+        path: fastapi.tar.gz
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Download Docker image
+      uses: actions/download-artifact@v2
+      with:
+        name: fastapi
+    - name: Load Docker image
+      run: docker load < fastapi.tar.gz
+    
+        
