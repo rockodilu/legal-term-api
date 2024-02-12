@@ -29,7 +29,7 @@ jobs:
       - name: Download Docker image
         uses: actions/download-artifact@v2
         with:
-          name: fastapi
+          name: docker-image
           path: .docker
 
       - name: Load Docker image
@@ -43,3 +43,32 @@ jobs:
         with:
           name: test-results
           path: test_results/
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    env:
+      KUBERNETES_CLUSTER_CA_CERTIFICATE: ${{ secrets.KUBERNETES_CLUSTER_CA_CERTIFICATE }}
+      KUBERNETES_AUTH_TOKEN: ${{ secrets.KUBERNETES_AUTH_TOKEN }}
+    steps:
+      - name: Download latest Docker image
+        uses: actions/download-artifact@v2
+        with:
+          name: docker-image
+          path: .docker
+
+      - name: Load Docker image
+        run: docker load -i .docker/image.tar
+
+      - name: Apply Kubernetes manifests
+        uses: azure/k8s-action@v3
+        with:
+          cluster_name: your-cluster-name
+          use_internal_ip: false
+          manifests: |
+            # Replace with your deployment and service manifests
+            deployment.yaml
+            service.yaml
+
+      - name: Wait for pod readiness
+        run: kubectl wait --for=condition=ready pods/<your-pod-name> -n <your-namespace> --timeout=300s
