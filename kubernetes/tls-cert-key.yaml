@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: testsecret-tls
+  namespace: default
+type: kubernetes.io/tls
+data:
+  tls.crt: ${{ secrets.TLS_CERT }}
+  tls.key: ${{ secrets.TLS_KEY }}
+
+# Note: 
+#       Keep in mind that TLS will not work on the default rule 
+#       because the certificiates would have to be issued for all the possible sub-domains.
+#       Therefore, hosts in the tls section need to explicitly match the host in the rules section.

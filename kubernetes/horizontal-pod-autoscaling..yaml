@@ -1,0 +1,28 @@
+# Deployment or StatefulSet
+# HPA does not apply to objects that can't be scaled (DaemonSet)
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: my-app-autoscaler
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: my-app
+  minReplicas: # Replace with your minimum desired replicas
+  maxReplicas: # Replace with your maximum desired replicas
+  metrics:
+  - type: Resource
+    resource:
+      name: # Replace with your chosen resource (e.g., cpu, memory)
+      target:
+        type: Utilization
+        value: # Replace with your desired target utilization percentage
+  # Add additional metrics if needed, adjusting the format accordingly
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: # Set a stabilizing window to avoid unnecessary fluctuations
+      replicas: # Define how many pods to scale up per interval
+    scaleDown:
+      stabilizationWindowSeconds: # Set a stabilizing window for downscaling
+      replicas: # Define how many pods to scale down per interval
