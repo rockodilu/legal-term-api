@@ -1,3 +1,4 @@
+
 name: CI
 
 on:
@@ -29,6 +30,16 @@ jobs:
         name: fastapi
     - name: Load Docker image
       run: docker load < fastapi.tar.gz
+    # runs-on: kubernetes-worker
+    # steps:
+    #   - uses: aws/k8s-action@v3
+    #     with:
+    #       cluster_name: my-cluster
+    #       use_internal_ip: false
+    #       service_account: ingress-service.yaml  # Replace with your service account
+    #   - name: Apply Kubernetes manifests
+    #     run: kubectl apply -f deployment.yaml -f ingress-service.yam  # Replace with your manifests
+
   test:
     runs-on: ubuntu-latest
     steps:
