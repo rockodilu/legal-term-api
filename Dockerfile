@@ -17,7 +17,7 @@ RUN poetry config virtualenvs.create false
 RUN poetry install --no-dev
 
 # Define environment variable
-# ENV UVICORN_HOST=0.0.0.0 UVICORN_PORT=8000
+ENV UVICORN_HOST=0.0.0.0 UVICORN_PORT=8000
 
 # Make port 8000 available to the world outside this container
 EXPOSE 8000
