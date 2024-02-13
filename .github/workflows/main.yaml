@@ -32,7 +32,7 @@ jobs:
       - name: Load Docker image
         run: docker load < fastapi.tar.gz
       - name: Install dependencies
-        run: pip install -r poetry.lock
+        run: pip install -r legal-term-api
       - name: Run tests
         run: pytest tests
 
