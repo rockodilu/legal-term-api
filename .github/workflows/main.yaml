@@ -32,7 +32,7 @@ jobs:
       - name: Load Docker image
         run: docker load < fastapi.tar.gz
       - name: Install dependencies
-        run: pip install py.test
+        run: pip install py3.test
       - name: Run tests
         run: pytest tests
 
