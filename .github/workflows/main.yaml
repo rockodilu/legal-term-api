@@ -22,6 +22,10 @@ jobs:
       - name: Poetry Config
         run: poetry config virtualenvs.create false
 
+      - name: Check installed Python version matches the required one and install the required one if necessary.
+        run: |
+          chmod +x scripts/check_python.sh
+          ./scripts/check_python.sh
       - name: Install dependencies
         run: poetry install
 
