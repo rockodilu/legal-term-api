@@ -39,8 +39,8 @@ jobs:
         run: pip install setuptools wheel
       - name: pip install --upgrade pip
         run: pip install --upgrade pip
-      - name: pip install py3.test
-        run: pip install py3.test
+      - name: pip install pytest
+        run: pip install pytest
       - name: Run tests
         run: pytest tests.py
 
