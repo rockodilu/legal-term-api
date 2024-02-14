@@ -19,6 +19,9 @@ jobs:
       - name: Check poetry
         run: poetry --version
 
+      - name: Poetry Config
+        run: poetry config virtualenvs.create false
+
       - name: Install dependencies
         run: poetry install
 
