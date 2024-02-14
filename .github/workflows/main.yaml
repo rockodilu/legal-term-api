@@ -35,6 +35,9 @@ jobs:
           poetry config virtualenvs.create true
           poetry install --no-dev
 
+      - name: Install pytest
+        run: pip install pytest
+
       - name: Run code test
         run: pytest tests/test_loading.py
          
