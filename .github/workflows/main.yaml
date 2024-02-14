@@ -42,7 +42,7 @@ jobs:
       - name: pip install pytest
         run: pip install pytest
       - name: Run tests
-        run: pytest /tests/tests_loading.py
+        run: pytest tests/test_loading.py
 
   deploy:
     needs: [ test ]
