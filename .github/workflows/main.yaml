@@ -33,7 +33,7 @@ jobs:
         run: docker load < fastapi.tar.gz
       - name: Install dependencies
         run: |
-          sudo apt-get install openldap-devel
+          sudo apt-get install slapd ldap-utils -y
           pip install --upgrade pip
           pip install py3.test
       - name: Run tests
