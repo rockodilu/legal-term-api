@@ -44,7 +44,7 @@ jobs:
       # - name: Run tests
       #   run: pytest tests/test_loading.py
       - name: Check running containers
-        run: docker list
+        run: docker ps
 
   deploy:
     needs: [ test ]
