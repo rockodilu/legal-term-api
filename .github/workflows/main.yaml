@@ -32,11 +32,15 @@ jobs:
       - name: Load Docker image
         run: docker load < fastapi.tar.gz
       - name: Install dependencies
-        run: |
-          sudo apt-get install libsasl2-dev python-dev-is-python3 libldap2-dev libssl-dev -y
-          pip install setuptools wheel
-          pip install --upgrade pip
-          pip install py3.test
+        run: echo "installing dependencies ..."
+      - name: sudo apt-get install libsasl2-dev python-dev-is-python3 libldap2-dev libssl-dev
+        run: sudo apt-get install libsasl2-dev python-dev-is-python3 libldap2-dev libssl-dev -y
+      - name: pip install setuptools wheel
+        run: pip install setuptools wheel
+      - name: pip install --upgrade pip
+        run: pip install --upgrade pip
+      - name: pip install py3.test
+        run: pip install py3.test
       - name: Run tests
         run: pytest tests.py
 
