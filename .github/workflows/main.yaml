@@ -31,7 +31,9 @@ jobs:
         run: sudo apt-get install python3.11
       
       - name: Install dependencies
-        run: poetry install --no-dev
+        run: |
+          poetry config virtualenvs.create true
+          poetry install --no-dev
 
       - name: Run code test
         run: pytest tests/test_loading.py
