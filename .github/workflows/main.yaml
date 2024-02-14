@@ -31,7 +31,7 @@ jobs:
         run: sudo apt-get install python3.11
       
       - name: Install dependencies
-        run: poetry install
+        run: poetry install --no-dev
 
       - name: Run code test
         run: pytest tests/test_loading.py
