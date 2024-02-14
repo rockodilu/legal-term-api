@@ -22,10 +22,13 @@ jobs:
       - name: Poetry Config
         run: poetry config virtualenvs.create false
 
-      - name: Get required python version
-        run: |
-          chmod +x scripts/check_python.sh
-          ./scripts/check_python.sh
+      # - name: Get required python version
+      #   run: |
+      #     chmod +x scripts/check_python.sh
+      #     ./scripts/check_python.sh
+
+      - name: Install python
+        run: sudo apt-get install python 3.11
       
       - name: Install dependencies
         run: poetry install
