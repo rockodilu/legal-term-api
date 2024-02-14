@@ -28,7 +28,7 @@ jobs:
       #     ./scripts/check_python.sh
 
       - name: Install python
-        run: sudo apt-get install python3 3.11
+        run: sudo apt-get install python3.11
       
       - name: Install dependencies
         run: poetry install
