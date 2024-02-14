@@ -16,7 +16,7 @@ jobs:
       # - name: Install dependencies
       #   run: echo "installing dependencies ..."
       - name: Check if poetry installed 
-        run: 
+        run: |
           chmod +x scripts/check_poetry.sh
           ./scripts/check_poetry.sh
       - name: check poetry
