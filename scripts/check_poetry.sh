@@ -1,5 +1,5 @@
 #!/bin/sh
 
-if ! poetry --version ; then
+if !poetry --version ; then
     sudo  install poetry
 fi
