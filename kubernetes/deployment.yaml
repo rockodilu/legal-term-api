@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: fastapi-container
-        image: rockodilu/fastapi:latest
+        image: rockodilu/fastapi:latest # use variables for username, image and tag ## or artifact ## has to match image name and location where image was created/pushed
         ports:
         - containerPort: 8000
         livenessProbe:
