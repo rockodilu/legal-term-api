@@ -30,10 +30,10 @@ jobs:
       - name: Install python
         run: sudo apt-get install python3.11
 
-      - name: Set installed python as default
-        run: |
-          sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.11
-          sudo update-alternatives --config python
+      # - name: Set installed python as default
+      #   run: |
+      #     sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.11
+      #     sudo update-alternatives --config python
       
       - name: Install dependencies
         run: |
