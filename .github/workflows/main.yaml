@@ -78,15 +78,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: docker login
-        env: 
-          DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
-          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-        run:
-          docker login -u DOCKER_USERNAME -p DOCKER_PASSWORD
-           
       - name: Build Docker image 
         run: docker build -t fastapi .
+
+      - name: docker login
+        run:
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Docker Push image 
         run: docker push rockodilu/fastapi
