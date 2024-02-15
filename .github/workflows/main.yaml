@@ -6,10 +6,10 @@ on:
   push:
     branches: [ main ]
 jobs:
-  code_testing: # create job for code_testing
+  code_testing: 
     runs-on: ubuntu-latest
     steps: 
-      - uses: actions/checkout@v3 # run ./tests/test_loading.py
+      - uses: actions/checkout@v4 
 
       - name: Check if poetry is installed, install if is not present
         run: |
@@ -61,65 +61,108 @@ jobs:
       # - name: Run tests
       #   run: pytest tests/test_loading.py
 
-#   build: 
-#     needs: [code_testing]
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v3 # It gives access to repository
+  build: 
+    needs: [code_testing]
+    name: Push Docker image to Docker Hub
+    runs-on: ubuntu-latest
 
-#       - name: Build Docker image # Builds the image from the repo
-#         run: docker build -t fastapi .
+    permissions:
+      contents: read
+      packages: write
 
-#       - name: Save Docker image # Save inage
-#         run: docker save fastapi | gzip > fastapi.tar.gz
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-#       - name: Check is file exists
-#         run: test -f fastapi.tar.gz
+      - name: docker login
+        env: 
+          username: ${{secrets.DOCKER_USERNAME}}
+          password: ${{secrets.DOCKER_PASSWORD}}
+        run:
+          docker login -u username -p password 
+           
+      - name: Build Docker image 
+        run: docker build -t fastapi .
 
-#       - name: Upload Docker image # Upload image to artifacts
-#         uses: actions/upload-artifact@v3
-#         with:
-#           name: fastapi
-#           path: fastapi.tar.gz  # build and push: STOP
-
-#   test:
-#     runs-on: ubuntu-latest
-#     needs: build
-#     steps:
-#       - uses: actions/checkout@v3 
-
-#       - name: Download Docker image #  use Docker Hub or ECR
-#         uses: actions/download-artifact@v3
-#         with:
-#           name: fastapi
-
-#       - name: Load Docker image  #use Docker Hub or ECR
-#         run: docker run -p 8000:8000 fastapi
-     
-#       - name: Check running containers
-#         run: curl -v http://0.0.0.0:8000/docs
-
-#       - name: Ckeck endpoint terms
-#         run: curl -v http://0.0.0.0:8000/terms
-
-#       - name: Ckeck endpoint definitions
-#         run: curl -v http://0.0.0.0:8000/definitions
-
-#       - name: Push image to Docker Hub or alternatives
-#         run: docker push ${{ var.DOCKER_USERNAME }}/fastapi # image name or variable 
-
-#   deploy:  # action for kubernetes deployment (AWS)
-#     needs: [ test ]
-#     runs-on: ubuntu-latest
-#     steps: 
-#       - uses: actions/checkout@v3
-
-#       - name: Download Docker image
-#         uses: actions/download-artifact@v3
-#         with:
-#           name: fastapi 
-
-#       - name: Deploy to Kubernetes
-#         run: kubectl apply -f kubernetes/deployment.yaml
+      - name: Docker Push image 
+        run: docker push rockodilu/fastapi 
         
-# ###### check action to deploy to kubernetes ce am nevoie? username, parola, etc
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4 
+
+      - name: Download Docker image 
+        uses: actions/download-artifact@v4
+        with:
+          name: fastapi
+
+      - name: Load Docker image  
+        run: docker run -p 8000:8000 fastapi
+      
+      - name: Check running containers
+        run: curl -v http://0.0.0.0:8000/docs
+
+      - name: Ckeck endpoint terms
+        run: curl -v http://0.0.0.0:8000/terms
+
+      - name: Ckeck endpoint definitions
+        run: curl -v http://0.0.0.0:8000/definitions
+
+      - name: Push image to Docker Hub or alternatives
+        run: docker push rockodilu/fastapi 
+
+  # deploy: 
+  #   needs: [ test ]
+  #   runs-on: ubuntu-latest
+  #   environment: deployment
+  #   env:
+  #     AWS_REGION: MY_AWS_REGION                  
+  #     ECR_REPOSITORY: MY_ECR_REPOSITORY          
+  #     ECS_SERVICE: MY_ECS_SERVICE                
+  #     ECS_CLUSTER: MY_ECS_CLUSTER                
+  #     ECS_TASK_DEFINITION: MY_ECS_TASK_DEFINITION 
+  #   steps: 
+  #     - uses: actions/checkout@v4     
+                                                 
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+
+  #     - name: Configure AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v4
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: ${{ env.AWS_REGION }}
+  
+  #     - name: Login to Amazon ECR
+  #       id: login-ecr
+  #       uses: aws-actions/amazon-ecr-login@v4
+  
+  #     - name: Build, tag, and push image to Amazon ECR
+  #       id: build-image
+  #       env:
+  #         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+  #         ECR_REPOSITORY: my-ecr-repo
+  #         IMAGE_TAG: ${{ github.sha }}
+  #       run: |
+  #         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+  #         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+  #         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+  
+  #     - name: Fill in the new image ID in the Amazon ECS task definition
+  #       id: task-def
+  #       uses: aws-actions/amazon-ecs-render-task-definition@v4
+  #       with:
+  #         task-definition: ${{ env.ECS_TASK_DEFINITION }}
+  #         container-name: ${{ env.CONTAINER_NAME }}
+  #         image: ${{ steps.build-image.outputs.image }}
+  
+  #     - name: Deploy Amazon ECS task definition
+  #       uses: aws-actions/amazon-ecs-deploy-task-definition@v4
+  #       with:
+  #         task-definition: ${{ steps.task-def.outputs.task-definition }}
+  #         service: ${{ env.ECS_SERVICE }}
+  #         cluster: ${{ env.ECS_CLUSTER }}
+  #         wait-for-service-stability: true
