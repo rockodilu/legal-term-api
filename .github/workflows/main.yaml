@@ -87,7 +87,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/fatapi:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/fastapi:latest
         
   test:
     runs-on: ubuntu-latest
