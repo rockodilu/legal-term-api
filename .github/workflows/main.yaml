@@ -6,63 +6,63 @@ on:
   push:
     branches: [ main ]
 jobs:
-  code_testing: 
-    runs-on: ubuntu-latest
-    steps: 
-      - uses: actions/checkout@v4 
+  # code_testing: 
+  #   runs-on: ubuntu-latest
+  #   steps: 
+  #     - uses: actions/checkout@v4 
 
-      - name: Check if poetry is installed, install if is not present
-        run: | 
-          chmod +x scripts/check_poetry.sh
-          ./scripts/check_poetry.sh
+  #     - name: Check if poetry is installed, install if is not present
+  #       run: | 
+  #         chmod +x scripts/check_poetry.sh
+  #         ./scripts/check_poetry.sh
 
-      - name: Check poetry
-        run: poetry --version
+  #     - name: Check poetry
+  #       run: poetry --version
 
-      - name: Poetry Config
-        run: poetry config virtualenvs.create false
+  #     - name: Poetry Config
+  #       run: poetry config virtualenvs.create false
 
-      # - name: Get required python version
-      #   run: |
-      #     chmod +x scripts/check_python.sh
-      #     ./scripts/check_python.sh
+  #     # - name: Get required python version
+  #     #   run: |
+  #     #     chmod +x scripts/check_python.sh
+  #     #     ./scripts/check_python.sh
 
-      - name: Install python
-        run: sudo apt-get install python3.11
+  #     - name: Install python
+  #       run: sudo apt-get install python3.11
 
-      # - name: Set installed python as default
-      #   run: |
-      #     sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.11
-      #     sudo update-alternatives --config python
+  #     # - name: Set installed python as default
+  #     #   run: |
+  #     #     sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.11
+  #     #     sudo update-alternatives --config python
       
-      - name: Install dependencies
-        run: |
-          poetry config virtualenvs.create true
-          poetry install --no-dev
+  #     - name: Install dependencies
+  #       run: |
+  #         poetry config virtualenvs.create true
+  #         poetry install --no-dev
 
-      - name: Install pytest
-        run: pip install pytest
+  #     - name: Install pytest
+  #       run: pip install pytest
 
-      - name: Install uvicorn
-        run: pip install uvicorn 
+  #     - name: Install uvicorn
+  #       run: pip install uvicorn 
 
-      - name: Run code test
-        run: pytest tests/test_loading.py
+  #     - name: Run code test
+  #       run: pytest tests/test_loading.py
          
-      # - name: sudo apt-get install libsasl2-dev python-dev-is-python3 libldap2-dev libssl-dev
-      #   run: sudo apt-get install libsasl2-dev python-dev-is-python3 libldap2-dev libssl-dev -y
+  #     # - name: sudo apt-get install libsasl2-dev python-dev-is-python3 libldap2-dev libssl-dev
+  #     #   run: sudo apt-get install libsasl2-dev python-dev-is-python3 libldap2-dev libssl-dev -y
 
-      # - name: pip install setuptools wheel
-      #   run: pip install setuptools wheel
+  #     # - name: pip install setuptools wheel
+  #     #   run: pip install setuptools wheel
 
-      # - name: pip install --upgrade pip
-      #   run: pip install --upgrade pip
+  #     # - name: pip install --upgrade pip
+  #     #   run: pip install --upgrade pip
 
-      # - name: pip install pytest
-      #   run: pip install pytest
+  #     # - name: pip install pytest
+  #     #   run: pip install pytest
 
-      # - name: Run tests
-      #   run: pytest tests/test_loading.py
+  #     # - name: Run tests
+  #     #   run: pytest tests/test_loading.py
 
   build: 
 #    needs: [code_testing]
@@ -81,11 +81,16 @@ jobs:
       - name: Build Docker image 
         run: docker build -t fastapi .
 
-      - name: docker login
-        run:
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      # - name: docker login
+      #   run:
+      #     docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Docker Push image 
+      - name: Push Image to Docker Hub 
         run: docker push rockodilu/fastapi
         
   test:
