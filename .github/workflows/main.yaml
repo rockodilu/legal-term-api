@@ -43,6 +43,9 @@ jobs:
       - name: Install pytest
         run: pip install pytest
 
+      - name: Install uvicorn
+        run: pip install uvicorn 
+
       - name: Run code test
         run: pytest tests/test_loading.py
          
