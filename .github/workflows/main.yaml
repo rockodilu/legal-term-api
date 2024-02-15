@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4 
 
       - name: Check if poetry is installed, install if is not present
-        run: |
+        run: | 
           chmod +x scripts/check_poetry.sh
           ./scripts/check_poetry.sh
 
