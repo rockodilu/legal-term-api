@@ -6,66 +6,72 @@ on:
   push:
     branches: [ main ]
 jobs:
-  # code_testing: 
-  #   runs-on: ubuntu-latest
-  #   steps: 
-  #     - uses: actions/checkout@v4 
+  code_testing: 
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v4
 
-  #     - name: Check if poetry is installed, install if is not present
-  #       run: | 
-  #         chmod +x scripts/check_poetry.sh
-  #         ./scripts/check_poetry.sh
+      - name: Get required python version
+        run: |
+          chmod +x scripts/check_python.sh
+          ./scripts/check_python.sh
 
-  #     - name: Check poetry
-  #       run: poetry --version
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.REQUIRED_PYTHON_VERSION }}
 
-  #     - name: Poetry Config
-  #       run: poetry config virtualenvs.create false
+      - name: Check if poetry is installed, install if is not present
+        run: | 
+          chmod +x scripts/check_poetry.sh
+          ./scripts/check_poetry.sh
 
-  #     # - name: Get required python version
-  #     #   run: |
-  #     #     chmod +x scripts/check_python.sh
-  #     #     ./scripts/check_python.sh
+      - name: Check poetry
+        run: poetry --version
 
-  #     - name: Install python
-  #       run: sudo apt-get install python3.11
+      - name: Poetry Config
+        run: poetry config virtualenvs.create false
 
-  #     # - name: Set installed python as default
-  #     #   run: |
-  #     #     sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.11
-  #     #     sudo update-alternatives --config python
+
+      - name: Install python
+        run: sudo apt-get install python3.11
+
+      # - name: Set installed python as default
+      #   run: |
+      #     sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.11
+      #     sudo update-alternatives --config python
       
-  #     - name: Install dependencies
-  #       run: |
-  #         poetry config virtualenvs.create true
-  #         poetry install --no-dev
+      - name: Install dependencies
+        run: |
+          poetry config virtualenvs.create true
+          poetry install --no-dev
 
-  #     - name: Install pytest
-  #       run: pip install pytest
+      - name: Install pytest
+        run: pip install pytest
 
-  #     - name: Install uvicorn
-  #       run: pip install uvicorn 
+      - name: Install uvicorn
+        run: pip install uvicorn 
 
-  #     - name: Run code test
-  #       run: pytest tests/test_loading.py
+      - name: Run code test
+        run: pytest tests/test_loading.py
          
-  #     # - name: sudo apt-get install libsasl2-dev python-dev-is-python3 libldap2-dev libssl-dev
-  #     #   run: sudo apt-get install libsasl2-dev python-dev-is-python3 libldap2-dev libssl-dev -y
+      # - name: sudo apt-get install libsasl2-dev python-dev-is-python3 libldap2-dev libssl-dev
+      #   run: sudo apt-get install libsasl2-dev python-dev-is-python3 libldap2-dev libssl-dev -y
 
-  #     # - name: pip install setuptools wheel
-  #     #   run: pip install setuptools wheel
+      # - name: pip install setuptools wheel
+      #   run: pip install setuptools wheel
 
-  #     # - name: pip install --upgrade pip
-  #     #   run: pip install --upgrade pip
+      # - name: pip install --upgrade pip
+      #   run: pip install --upgrade pip
 
-  #     # - name: pip install pytest
-  #     #   run: pip install pytest
+      # - name: pip install pytest
+      #   run: pip install pytest
 
-  #     # - name: Run tests
-  #     #   run: pytest tests/test_loading.py
+      # - name: Run tests
+      #   run: pytest tests/test_loading.py
 
   build: 
-#    needs: [code_testing]
+   needs: [code_testing]
     name: Push Docker image to Docker Hub
 
     runs-on: ubuntu-latest
