@@ -71,7 +71,7 @@ jobs:
       #   run: pytest tests/test_loading.py
 
   build: 
-   needs: [code_testing]
+    needs: [code_testing]
     name: Push Docker image to Docker Hub
 
     runs-on: ubuntu-latest
