@@ -86,7 +86,7 @@ jobs:
         run: docker build -t fastapi .
 
       - name: Docker Push image 
-        run: docker push ${{secrets.DOCKER_USERNAME}}/fastapi
+        run: docker push rockodilu/fastapi
         
   test:
     runs-on: ubuntu-latest
