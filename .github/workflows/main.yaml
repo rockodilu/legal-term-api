@@ -93,9 +93,12 @@ jobs:
 
       - name: Check docker
         run: docker version
-        
+
       - name: Load Docker image  
         run: docker run -d --name fastapi -p 8000:8000 rockodilu/fastapi
+        
+      - name: List running docker containers
+        run: docker ps
         
       - name: Check running containers
         run: curl https://localhost:8000
