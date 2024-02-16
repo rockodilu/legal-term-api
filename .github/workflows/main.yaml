@@ -104,10 +104,10 @@ jobs:
         run: docker ps
 
       - name: sleep
-        run: sleep 30
+        run: sleep 10
 
       - name: Check running containers
-        run: curl http://localhost:8000
+        run: curl http://localhost:8000/docs
 
       - name: Ckeck endpoint terms
         run: curl https://localhost:8000/terms
