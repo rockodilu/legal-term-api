@@ -94,11 +94,11 @@ jobs:
       - name: Load Docker image  
         run: docker run -d --name fastapi -p 8000:8000 rockodilu/fastapi
         
-      # - name: Check running containers
-      #   run: curl -v http://0.0.0.0:8000/docs
+      - name: Check running containers
+        run: curl https://0.0.0.0:8000/docs
 
       - name: Ckeck endpoint terms
-        run: curl http://localhost:8000/terms
+        run: curl https://localhost:8000/terms
 
       - name: Ckeck endpoint definitions
         run: curl http://localhost:8000/definitions
