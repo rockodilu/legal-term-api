@@ -84,8 +84,8 @@ jobs:
       - name: Load Docker image  
         run: docker run -d --name fastapi -p 8000:8000 rockodilu/fastapi
 
-      - name: sleep
-        run: sleep 10
+      # - name: sleep
+      #   run: sleep 10
 
       - name: Check running containers
         run: curl http://localhost:8000/docs
