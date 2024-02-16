@@ -98,10 +98,10 @@ jobs:
       #   run: curl -v http://0.0.0.0:8000/docs
 
       - name: Ckeck endpoint terms
-        run: curl -v http://0.0.0.0:8000/terms
+        run: curl http://localhost:8000/terms
 
       - name: Ckeck endpoint definitions
-        run: curl -v http://0.0.0.0:8000/definitions
+        run: curl http://localhost:8000/definitions
 
       - name: Push image to Docker Hub or alternatives
         run: docker push rockodilu/fastapi 
