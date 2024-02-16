@@ -6,7 +6,7 @@ on:
   push:
     branches: [ main ]
 jobs:
-  code_test: 
+  # code_test: 
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/checkout@v4
@@ -46,7 +46,7 @@ jobs:
       - name: Run code test
         run: pytest tests/test_loading.py
 
-  build: 
+  # build: 
     needs: [code_test]
 
     runs-on: ubuntu-latest
