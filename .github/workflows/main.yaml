@@ -110,7 +110,7 @@ jobs:
         run: curl http://localhost:8000/docs
 
       - name: Ckeck endpoint terms
-        run: curl https://localhost:8000/terms
+        run: curl http://localhost:8000/terms
 
       - name: Ckeck endpoint definitions
         run: curl http://localhost:8000/definitions
