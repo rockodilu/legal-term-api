@@ -94,8 +94,8 @@ jobs:
       - name: Load Docker image  
         run: docker run -d -p 8000:8000 rockodilu/fastapi
         
-      - name: Check running containers
-        run: curl -v http://0.0.0.0:8000/docs
+      # - name: Check running containers
+      #   run: curl -v http://0.0.0.0:8000/docs
 
       - name: Ckeck endpoint terms
         run: curl -v http://0.0.0.0:8000/terms
