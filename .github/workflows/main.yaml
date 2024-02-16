@@ -81,8 +81,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: update server
-        run: sudo apt update && sudo apt upgrade -y
+      # - name: update server
+      #   run: sudo apt update && sudo apt upgrade -y
 
       # - name: Download Docker image 
       #   uses: actions/download-artifact@v4
@@ -103,8 +103,11 @@ jobs:
       - name: List running docker containers
         run: docker ps
 
+      - name: sleep
+        run: sleep 30
+
       - name: Check running containers
-        run: curl https://localhost:8000
+        run: curl http://localhost:8000
 
       - name: Ckeck endpoint terms
         run: curl https://localhost:8000/terms
