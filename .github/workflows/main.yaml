@@ -6,78 +6,73 @@ on:
   push:
     branches: [ main ]
 jobs:
-  # code_test: 
-  #   runs-on: ubuntu-latest
-  #   steps: 
-  #     - uses: actions/checkout@v4
+  code_test: 
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v4
 
-  #     - name: Get required python version
-  #       run: |
-  #         chmod +x scripts/check_python.sh
-  #         ./scripts/check_python.sh
+      - name: Get required python version
+        run: |
+          chmod +x scripts/check_python.sh
+          ./scripts/check_python.sh
 
-  #     - name: Set up Python
-  #       uses: actions/setup-python@v4
-  #       with:
-  #         python-version: 3.11
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
 
-  #     - name: Check if poetry is installed, install if is not present
-  #       run: | 
-  #         chmod +x scripts/check_poetry.sh
-  #         ./scripts/check_poetry.sh
+      - name: Check if poetry is installed, install if is not present
+        run: | 
+          chmod +x scripts/check_poetry.sh
+          ./scripts/check_poetry.sh
 
-  #     - name: Check poetry
-  #       run: poetry --version
+      - name: Check poetry
+        run: poetry --version
       
-  #     - name: Install dependencies
-  #       run: |
-  #         poetry config virtualenvs.create true
-  #         poetry install --no-dev
+      - name: Install dependencies
+        run: |
+          poetry config virtualenvs.create true
+          poetry install --no-dev
 
-  #     - name: Install pytest
-  #       run: pip install pytest
+      - name: Install pytest
+        run: pip install pytest
 
-  #     - name: Install uvicorn
-  #       run: pip install uvicorn 
+      - name: Install uvicorn
+        run: pip install uvicorn 
 
-  #     - name: Install fastapi
-  #       run: pip install fastapi
+      - name: Install fastapi
+        run: pip install fastapi
 
-  #     - name: Run code test
-  #       run: pytest tests/test_loading.py
+      - name: Run code test
+        run: pytest tests/test_loading.py
 
-  # build: 
-  #   needs: [code_test]
+  build: 
+    needs: [code_test]
 
-  #   runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  #     - name: Build Docker image 
-  #       run: docker build -t fastapi .
+      - name: Build Docker image 
+        run: docker build -t fastapi .
 
-  #     - name: Login to Docker Hub
-  #       uses: docker/login-action@v3
-  #       with:
-  #         username: ${{ secrets.DOCKERHUB_USERNAME }}
-  #         password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-  #     - name: Build and push
-  #       uses: docker/build-push-action@v5
-  #       with:
-  #         push: true
-  #         tags: ${{ secrets.DOCKERHUB_USERNAME }}/fastapi:latest
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/fastapi:latest
         
-  #     # - name: Upload artifact 
-  #     #   uses: actions/upload-artifact@v4
-  #     #   with:
-  #     #     name: fastapi
-  #     #     path: fastapi
   test:
     runs-on: ubuntu-20.04
-    # needs: build
+    needs: build
     steps:
       - uses: actions/checkout@v4
 
