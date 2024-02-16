@@ -91,6 +91,9 @@ jobs:
       #     username: ${{ secrets.DOCKERHUB_USERNAME }}
       #     password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Check docker
+        run: docker version
+        
       - name: Load Docker image  
         run: docker run -d --name fastapi -p 8000:8000 rockodilu/fastapi
         
