@@ -3,5 +3,3 @@ REQUIRED_PYTHON_VERSION=$(cat pyproject.toml | grep python | awk '{print$3}' | t
 echo ${REQUIRED_PYTHON_VERSION}
 
 export REQUIRED_PYTHON_VERSION=${REQUIRED_PYTHON_VERSION}
-
-echo ${REQUIRED_PYTHON_VERSION}

@@ -29,23 +29,19 @@ jobs:
       - name: Check poetry
         run: poetry --version
 
-      - name: Poetry Config
-        run: poetry config virtualenvs.create false
-
-
-      - name: Install python
-        run: sudo apt-get install python3.11
+      # - name: Poetry Config
+      #   run: poetry config virtualenvs.create false
       
       - name: Install dependencies
         run: |
           poetry config virtualenvs.create true
           poetry install --no-dev
 
-      - name: Install pytest
-        run: pip install pytest
+      # - name: Install pytest
+      #   run: pip install pytest
 
-      - name: Install uvicorn
-        run: pip install uvicorn 
+      # - name: Install uvicorn
+      #   run: pip install uvicorn 
 
       - name: Run code test
         run: pytest tests/test_loading.py
