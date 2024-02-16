@@ -81,13 +81,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # - name: Load Docker image  
-      #   run: docker run -d --name fastapi -p 8000:8000 rockodilu/fastapi --health-cmd
+      - name: Load Docker image  
+        run: docker run -d --name fastapi -p 8000:8000 rockodilu/fastapi
 
-      - uses: addnab/docker-run-action@v3
-        with:
-          image: rockodilu/fastapi:latest
-          run: echo "Legal Term API"
+      - name: Sleep 10 to wait for the container to run
+        run: sleep 10
 
       - name: Check running containers
         run: curl http://localhost:8000/docs
