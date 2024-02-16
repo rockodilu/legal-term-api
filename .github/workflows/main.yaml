@@ -79,7 +79,10 @@ jobs:
     runs-on: ubuntu-latest
     # needs: build
     steps:
-      - uses: actions/checkout@v4 
+      - uses: actions/checkout@v4
+
+      - name: update server
+        run: sudo apt update && sudo apt upgrade -y
 
       # - name: Download Docker image 
       #   uses: actions/download-artifact@v4
@@ -99,7 +102,7 @@ jobs:
         
       - name: List running docker containers
         run: docker ps
-        
+
       - name: Check running containers
         run: curl https://localhost:8000
 
