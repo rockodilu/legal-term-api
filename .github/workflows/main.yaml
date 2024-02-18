@@ -77,10 +77,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Load Docker image  
-        run: docker run -it -d --name fastapi -p 8000:8000 rockodilu/fastapi
+        run: docker run -d --name fastapi -p 8000:8000 rockodilu/fastapi
 
-      # - name: Sleep 10 to wait for the container to run
-      #   run: sleep 10
+      - name: Sleep 10 to wait for the container to run
+        run: sleep 10
 
       - name: Check running containers
         run: curl http://localhost:8000/docs
