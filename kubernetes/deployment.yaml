@@ -19,25 +19,25 @@ spec:
         - containerPort: 8000
         livenessProbe:
           httpGet:
-            path: /healthz
+            path: /terms
             port: 8000
             initialDelaySeconds: 15
             periodSeconds: 20
             failureThreshold: 3
-          tcpSocket:
-            port: 8000
+          tcpSocket:    # used for checking ports
+            port: 5432
             initialDelaySeconds: 15
             periodSeconds: 20
             failureThreshold: 3
         readinessProbe:
           httpGet:
-            path: /healthz
+            path: /terms
             port: 8000
             initialDelaySeconds: 15
             periodSeconds: 20
             failureThreshold: 3
-          tcpSocket:
-            port: 8000
+          tcpSocket:    # used for checking ports
+            port: 5432 
             initialDelaySeconds: 15
             periodSeconds: 20
             failureThreshold: 3

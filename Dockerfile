@@ -23,4 +23,4 @@ ENV UVICORN_HOST=0.0.0.0 UVICORN_PORT=8000
 EXPOSE 8000
 
 # Run the application
-CMD ["uvicorn", "src.api:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "src.api:app", "--host", "0.0.0.0", "--port", "8000", "sleep", "10" ]
